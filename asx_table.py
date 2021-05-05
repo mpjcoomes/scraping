@@ -16,7 +16,7 @@ names = ["Equity - Australian Small/Mid Cap", "Equity - Australian Sectors", "Eq
          "Property - Australia", "Property - Global", "Currency", "Fixed Income - Australian Dollar",
          "Fixed Income - Global", "Cash", "Mixed Asset", "Commodity"]
 
-for i, j in zip(range(1, 26), names):
+for i, j in enumerate(names, start=1):
     df2 = pd.read_html(r.text, header=0)[i]
     df2 = df2.assign(ASX_CLASS=j)
     df = pd.concat([df, df2])
