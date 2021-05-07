@@ -7,3 +7,5 @@ This program touches the ASX website, just once, to download a public list of fi
 After that, it very slowly (i.e. 10 seconds between pages) crawls through a financial website to left-join additional information. Effectively, this slow approach replicates a human copying the ASX list into a spreadsheet, then systematically going through each product to add useful information.
 
 This slow fair-use approach requires ~36.5 minutes.
+
+The separate cryptonews.py program gathers a list of coins and market caps for AU-tradable Coinbase assets.
