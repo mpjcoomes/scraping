@@ -9,21 +9,34 @@ import asx_table
 
 df_mi = pd.DataFrame()
 
-for i in asx_table.df["CODE"][1:3]:
+for i in asx_table.df["CODE"]:
     driver = webdriver.Firefox(executable_path="/home/user/geckodriver")
     driver.maximize_window()
     time.sleep(5)
     driver.get("https://www.marketindex.com.au/asx/" + i)
     time.sleep(5)
     html = driver.page_source
-    soup = BeautifulSoup(html, "html.parser")
-    div_yield = re.sub('[%]', '', soup.text.split('\n')[49].split(' ')[17])
-    one_yr = re.sub('[%]', '', soup.text.split('\n')[49].split(' ')[28])
-    cap = re.sub('[$,]', '', soup.text.split('\n')[291])
-    cap = cap if cap != "Market Capitalisation" else re.sub('[$,]', '', soup.text.split('\n')[292])
-    cap = round(float(cap) / 10 ** 6)
-    df2 = pd.DataFrame({"CODE": i, "CAP($M)": [cap], "YIELD(%)": [div_yield], "1YR(%)": [one_yr]})
-    df_mi = pd.concat([df_mi, df2])
     driver.close()
+    soup = BeautifulSoup(html, "html.parser")
+    flat = re.sub('[\n]', ' ', soup.text)
+    div_yield = re.split(' ', re.search("DIV YIELD [0-9.]*", flat).group())[2]
+    one_yr = re.split(' ', re.search("1 YR RETURN -*[0-9.]*", flat).group())[3]
+    cap = re.split(' ', re.sub('[$,]', '', re.search("Market Capitalisation \$[0-9,]*", flat).group()))[2]
+    cap = round(float(cap) / 10 ** 6)
+    driver = webdriver.Firefox(executable_path="/home/user/geckodriver")
+    driver.maximize_window()
+    time.sleep(1)
+    driver.get("https://www2.asx.com.au/markets/etp/" + i)
+    time.sleep(1)
+    html = driver.page_source
+    driver.close()
+    soup = BeautifulSoup(html, "html.parser")
+    frank = re.split(' ', re.search("Franking [0-9]*", soup.text).group())[1]
+    companies = re.split(' ',  re.sub('[,]', '', re.search("Total fund holdings [0-9,]*", soup.text).group()))[3]
+    df2 = pd.DataFrame(
+        {"CODE": i, "FRANK(%)": [frank], "HOLDS": [companies], "CAP($M)": [cap], "YIELD(%)": [div_yield],
+         "1YR(%)": [one_yr]})
+    df_mi = pd.concat([df_mi, df2])
 
-asx_table.df.merge(df_mi, on="CODE", how='left').to_csv('file1.csv', sep='\t')
+df = asx_table.df.merge(df_mi, on="CODE", how='left')
+df.to_csv('file1.csv', sep='\t')
