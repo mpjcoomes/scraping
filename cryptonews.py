@@ -27,7 +27,7 @@ df["Market cap"] = df.apply(
 df = df[[1, 0, "Market cap"]]
 df.columns = ["CODE", "NAME", "CAP($M)"]
 
-# AU Coinbase supported, 58 as of 14-05-2021, Celo is CGLD on Coinbase, CELO elsewhere.
+# AU Coinbase supported, 59 as of 05-06-2021, Celo is CGLD on Coinbase, CELO elsewhere.
 coinbaseAU = [
     "1INCH",
     "AAVE",
@@ -49,6 +49,7 @@ coinbaseAU = [
     "DAI",
     "DASH",
     "DNT",
+    "DOGE",
     "ENJ",
     "EOS",
     "ETC",
