@@ -61,5 +61,7 @@ df.columns = ["ASX_CAT", "CODE", "TYP", "NAME", "BENCHMARK", "MER%", "OF", "AGE(
 df["AGE(Y)"] = datetime.now() - pd.to_datetime(df["AGE(Y)"], format="%d/%m/%Y")
 df["AGE(Y)"] = (df["AGE(Y)"] / np.timedelta64(1, "Y")).round(1)
 
+# df = df[~df["CODE"].isin(["IESG", "HYGG", "MAAT"])]
+
 df.reset_index(drop=True, inplace=True)
 df.to_csv("file0.csv", sep="\t")
