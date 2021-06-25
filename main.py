@@ -58,7 +58,7 @@ for i in asx_table.df["CODE"]:
     df2 = pd.DataFrame(
         {
             "CODE": i,
-            "FRANK(%)": [frank],
+            "FRK(%)": [frank],
             "HOLDS": [holdings],
             "US(%)": [us],
             "CH(%)": [chyna],
